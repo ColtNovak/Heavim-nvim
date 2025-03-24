@@ -1,8 +1,0 @@
-{
-    "workbench.iconTheme": "vs-minimal",
-    "terminal.integrated.defaultProfile.linux": "zsh",
-    "terminal.integrated.cursorStyle": "line",
-    "terminal.integrated.fontFamily": "Caskaydia Cove Nerd Font Complete Mono Windows Compatible",
-
-    "terminal.integrated.fontLigatures.enabled": true,
-}
