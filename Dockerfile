@@ -2,13 +2,14 @@ FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y \
     git curl python3-pip ripgrep fd-find \
-    fuse libfuse2 xz-utils software-properties-common \
-    lua5.3 luarocks --no-install-recommends \
-    && add-apt-repository ppa:jak-linux/ppa -y \
-    && apt-get update \
-    && apt-get install -y fastfetch \
+    fuse libfuse2 xz-utils \
+    lua5.3 luarocks nodejs npm \
+    build-essential --no-install-recommends \
+    && curl -LO https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3/fastfetch-2.13.3-Ubuntu_22.04.amd64.deb \
+    && dpkg -i fastfetch-2.13.3-Ubuntu_22.04.amd64.deb \
+    && rm fastfetch-2.13.3-Ubuntu_22.04.amd64.deb \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs build-essential \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz \
@@ -16,8 +17,7 @@ RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-lin
     && mv nvim-linux64/bin/nvim /usr/local/bin/ \
     && rm -rf nvim-linux64*
 
-RUN luarocks install luacheck \
-    && npm install -g neovim typescript-language-server \
+RUN npm install -g neovim typescript-language-server \
     vscode-langservers-extracted @tailwindcss/language-server \
     && python3 -m pip install pynvim python-lsp-server[all]
 
