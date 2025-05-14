@@ -21,7 +21,7 @@ jobs:
           
       - name: Deploy
         run: |
-          fly apps create --name your-neovim-app || true
+          fly apps create --name heavim-nvim || true
           fly volumes create neovim_workspace --yes --size 1 || true
           fly deploy --remote-only --dockerfile Dockerfile
           fly ips allocate-v4 || true
