@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     lua5.3 \
     luarocks \
     python3-pip \
+    fastfetch \
     nodejs \
     npm \
     ripgrep \
