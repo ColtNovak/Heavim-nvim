@@ -8,13 +8,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/fastfetch-cli/fastfetch.git /tmp/fastfetch \
-    && mkdir -p /tmp/fastfetch/build \
-    && cd /tmp/fastfetch/build \
-    && cmake .. \
-    && cmake --build . --target fastfetch -j$(nproc) \
-    && cmake --install . \
-    && rm -rf /tmp/fastfetch
+RUN curl -L https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3/fastfetch-2.13.3-Linux.tar.xz \
+    | tar -xJ -C /usr/local/bin/ --strip-components=1 fastfetch-2.13.3-Linux/fastfetch
 
 RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz \
     && tar xzf nvim-linux64.tar.gz \
