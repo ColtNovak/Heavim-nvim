@@ -1,30 +1,38 @@
-name: Deploy to Fly.io
+FROM ubuntu:22.04
 
-on:
-  push:
-    branches: [main]
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    lua5.3 \
+    luarocks \
+    python3-pip \
+    nodejs \
+    npm \
+    ripgrep \
+    fd-find \
+    fuse \
+    libfuse2 \
+    && rm -rf /var/lib/apt/lists/*
 
-env:
-  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim.appimage \
+    && chmod u+x nvim.appimage \
+    && mv nvim.appimage /usr/local/bin/nvim
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+RUN python3 -m pip install pynvim \
+    && npm install -g neovim
 
-      - name: Install Fly.io CLI
-        run: |
-          curl -L https://fly.io/install.sh | sh
-          echo "$HOME/.fly/bin" >> $GITHUB_PATH
-          echo 'export FLYCTL_INSTALL="$HOME/.fly"' >> $HOME/.bashrc
-          source $HOME/.bashrc
+RUN mkdir -p /root/.config/nvim
 
-      - name: Login to Fly.io
-        run: |
-          fly auth login --stdin <<< "$FLY_API_TOKEN"
+ARG NEOVIM_CONFIG_REPO="https://github.com/ColtNovak/HeaVim-nvim.git"
+RUN git clone "$NEOVIM_CONFIG_REPO" /tmp/nvim-config \
+    && mv /tmp/nvim-config/* /root/.config/nvim/ \
+    && mv /tmp/nvim-config/.* /root/.config/nvim/ 2>/dev/null || true \
+    && rm -rf /tmp/nvim-config
 
-      - name: Deploy
-        run: |
-          fly deploy --remote-only --dockerfile Dockerfile
+RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd \
+    && chmod +x /usr/local/bin/ttyd
+
+RUN mkdir -p /workspace
+WORKDIR /workspace
+
+CMD ["ttyd", "-p", "8080", "nvim"]
