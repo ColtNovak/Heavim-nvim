@@ -1,8 +1,9 @@
-name: Deploy to Fly.io
+# .github/workflows/deploy.yml
+name: Deploy Neovim
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -11,17 +12,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to Fly.io
+      - uses: actions/checkout@v4
+      
+      - name: Setup Fly.io
         run: |
           curl -L https://fly.io/install.sh | sh
           echo "$FLY_API_TOKEN" | fly auth login --stdin
-
-      - name: Build and deploy
+          
+      - name: Deploy
         run: |
+          fly apps create --name your-neovim-app || true
+          fly volumes create neovim_workspace --yes --size 1 || true
           fly deploy --remote-only --dockerfile Dockerfile
+          fly ips allocate-v4 || true
+          fly open
