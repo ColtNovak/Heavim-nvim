@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     libfuse2 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim.appimage \
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10/nvim.appimage \
     && chmod u+x nvim.appimage \
     && mv nvim.appimage /usr/local/bin/nvim
 
