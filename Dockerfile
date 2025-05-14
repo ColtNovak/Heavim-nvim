@@ -3,13 +3,14 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y \
     git curl python3-pip ripgrep fd-find \
     fuse libfuse2 xz-utils lua5.3 luarocks \
-    build-essential cmake pkg-config --no-install-recommends \
+    build-essential --no-install-recommends \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -L https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3/fastfetch-2.13.3-Linux.tar.xz \
-    | tar -xJ -C /usr/local/bin/ --strip-components=1 fastfetch-2.13.3-Linux/fastfetch
+RUN curl -LO https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3/fastfetch-2.13.3-linux-x64.tar.xz \
+    && tar -xJf fastfetch-2.13.3-linux-x64.tar.xz -C /usr/local/bin/ --strip-components=1 fastfetch-2.13.3-linux-x64/fastfetch \
+    && rm fastfetch-2.13.3-linux-x64.tar.xz
 
 RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz \
     && tar xzf nvim-linux64.tar.gz \
