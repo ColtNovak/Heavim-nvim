@@ -2,19 +2,8 @@ FROM ubuntu:22.04
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    software-properties-common \
     curl \
     git \
-    ca-certificates \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN echo "deb http://ppa.launchpad.net/neovim-ppa/stable/ubuntu jammy main" > /etc/apt/sources.list.d/neovim.list && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 9DBB0BE9366964F134855E2255F96FCF8231B6DD
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    neovim \
     python3-pip \
     ripgrep \
     fd-find \
@@ -24,6 +13,13 @@ RUN apt-get update && \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux-x86_64.tar.gz && \
+    tar xzf nvim-linux-x86_64.tar.gz && \
+    mv nvim-linux-x86_64/bin/nvim /usr/local/bin/ && \
+    mv nvim-linux-x86_64/lib/nvim /usr/local/lib/ && \
+    mv nvim-linux-x86_64/share/nvim /usr/local/share/ && \
+    rm -rf nvim-linux-x86_64*
+
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
@@ -31,7 +27,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 RUN python3 -m pip install pynvim
 
 RUN mkdir -p /root/.config/nvim
-
 ARG NEOVIM_CONFIG_REPO="https://github.com/ColtNovak/HeaVim-nvim.git"
 RUN git clone --depth 1 "$NEOVIM_CONFIG_REPO" /root/.config/nvim && \
     rm -rf /root/.config/nvim/.git
