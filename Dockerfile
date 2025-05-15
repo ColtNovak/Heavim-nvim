@@ -1,15 +1,23 @@
 FROM ubuntu:22.04
-
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y \
     git curl python3-pip ripgrep fd-find \
     fuse libfuse2 xz-utils lua5.3 luarocks \
-    build-essential ca-certificates && \
+    build-essential --no-install-recommends && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g --no-audit --no-fund neovim && \
+# Install latest Neovim from GitHub (v0.10.0) - using the method that works
+RUN curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz -o nvim-linux64.tar.gz && \
+    tar xzf nvim-linux64.tar.gz && \
+    mv nvim-linux64/bin/nvim /usr/local/bin/ && \
+    mkdir -p /usr/local/share/nvim && \
+    cp -r nvim-linux64/share/* /usr/local/share/ && \
+    rm -rf nvim-linux64*
+
+RUN npm install -g \
+    neovim && \
     python3 -m pip install --no-cache-dir \
     pynvim \
     python-lsp-server[all]
@@ -22,13 +30,7 @@ RUN nvim --headless "+Lazy sync" +qa && \
     nvim --headless "+MasonInstallAll" +qa
 
 RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd && \
-    chmod +x /usr/local/bin/ttyd && \
-    ttyd --version
+    chmod +x /usr/local/bin/ttyd
 
 WORKDIR /workspace
 CMD ["ttyd", "-p", "8080", "nvim"]
-
-RUN node --version && \
-    npm --version && \
-    python3 --version && \
-    nvim --version
