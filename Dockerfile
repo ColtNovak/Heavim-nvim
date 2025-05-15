@@ -19,14 +19,12 @@ RUN curl -LO https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3
     || apt-get install -yf \
     && rm fastfetch-2.13.3-Ubuntu_22.04.amd64.deb
 
-
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux-x86_64.tar.gz && \
-    tar xzf nvim-linux-x86_64.tar.gz && \
-    mv nvim-linux-x86_64/bin/nvim /usr/local/bin/ && \
-    mv nvim-linux-x86_64/lib/nvim /usr/local/lib/ && \
-    mv nvim-linux-x86_64/share/nvim /usr/local/share/ && \
-    rm -rf nvim-linux-x86_64*
-
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux64.tar.gz \
+    && tar xzf nvim-linux64.tar.gz \
+    && mv nvim-linux64/bin/nvim /usr/local/bin/ \
+    && mv nvim-linux64/lib/nvim /usr/local/lib/ \
+    && mv nvim-linux64/share/nvim /usr/local/share/ \
+    && rm -rf nvim-linux64*
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get purge -y nodejs npm \
