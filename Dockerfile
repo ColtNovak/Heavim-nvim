@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 
 RUN pacman -Syu --noconfirm --needed \
     git neovim nodejs npm python \
-    bash ncurses util-linux xterm-terminfo \
+    bash ncurses util-linux  \
     && rm -rf /var/cache/pacman/pkg/*
 
 ENV TERM=xterm-256color
