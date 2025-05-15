@@ -28,36 +28,20 @@ require("lazy").setup({
       })
     end,
   },
-  {
-    'akinsho/toggleterm.nvim',
+   {
+    'akinsho/toggleterm.nvim', 
     version = "*",
     config = function()
       require("toggleterm").setup({
-        size = function(term)
-          return term.direction == "horizontal" and 15 or 80
-        end,
+        size = 20,
         open_mapping = [[<leader>tt]],
         direction = "horizontal",
-        persist_size = false,
         close_on_exit = true,
-        shell = vim.o.shell,
         float_opts = {
           border = "curved",
-          winblend = 3,
-          width = function() return math.floor(vim.o.columns * 0.8) end,
-          height = function() return math.floor(vim.o.lines * 0.8) end
-        },
-        highlights = {
-          Normal = { link = "Normal" },
-          NormalFloat = { link = "NormalFloat" },
-          FloatBorder = { link = "FloatBorder" }
+          winblend = 3
         }
       })
-
-      -- Force create terminal command
-      vim.api.nvim_create_user_command("ToggleTerm", function()
-        require("toggleterm").toggle()
-      end, {})
     end
   },
   {
