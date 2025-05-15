@@ -2,7 +2,6 @@ return {
   {
     "folke/trouble.nvim",
     opts = { use_diagnostic_signs = true },
-    enabled = true,
     dependencies = { "nvim-tree/nvim-web-devicons" },
   },
   {
@@ -25,28 +24,26 @@ return {
         },
       })
     end,
-  },{
+  },
+  {
     'akinsho/toggleterm.nvim',
     version = "*",
     config = function()
       require("toggleterm").setup({
-        direction = "horizontal",
-        open_mapping = [[<leader>tt]],
         size = 15,
-        shade_filetypes = {},
-        shade_terminals = true,
-        shading_factor = 2,
-        persist_size = true,
-        close_on_exit = true,
-        shell = vim.o.shell,
+        open_mapping = [[<leader>tt]],
+        direction = "horizontal",
+        persist_mode = true,
         auto_scroll = true,
       })
       
-      -- Set leader to space (if not already set)
-      vim.g.mapleader = " "
-      vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { noremap = true, silent = true })
+      vim.api.nvim_create_user_command("ToggleTerm", function()
+        require("toggleterm").toggle()
+      end, {})
     end
   },
   {
-    "nvim-tree/nvim-web-devicons",}
+    "nvim-tree/nvim-web-devicons",
+    config = true
   }
+}
