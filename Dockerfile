@@ -1,36 +1,42 @@
 FROM ubuntu:22.04
-RUN apt-get update && \
-    apt-get install -y \
-    git curl python3-pip ripgrep fd-find \
-    fuse libfuse2 xz-utils lua5.3 luarocks \
-    build-essential --no-install-recommends && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
 
-# Install latest Neovim from GitHub (v0.10.0) - using the method that works
-RUN curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz -o nvim-linux64.tar.gz && \
-    tar xzf nvim-linux64.tar.gz && \
-    mv nvim-linux64/bin/nvim /usr/local/bin/ && \
-    mkdir -p /usr/local/share/nvim && \
-    cp -r nvim-linux64/share/* /usr/local/share/ && \
-    rm -rf nvim-linux64*
+# Install base dependencies
+RUN apt-get update && apt-get install -y \
+    git curl python3-pip ripgrep fd-find xz-utils \
+    fuse libfuse2 build-essential --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g \
-    neovim && \
-    python3 -m pip install --no-cache-dir \
-    pynvim \
-    python-lsp-server[all]
+# Install Node.js 20.x
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g neovim
 
-RUN mkdir -p /root/.config/nvim && \
-    git clone --depth 1 https://github.com/ColtNovak/HeaVim-nvim.git /root/.config/nvim && \
-    rm -rf /root/.config/nvim/.git
+# Install Neovim 0.9.5
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz \
+    && tar xzf nvim-linux64.tar.gz \
+    && mv nvim-linux64/bin/nvim /usr/local/bin/ \
+    && rm -rf nvim-linux64*
 
-RUN nvim --headless "+Lazy sync" +qa && \
-    nvim --headless "+MasonInstallAll" +qa
+# Install Python provider
+RUN python3 -m pip install pynvim
 
-RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd && \
-    chmod +x /usr/local/bin/ttyd
+# Create config structure
+RUN mkdir -p /root/.config/nvim
+
+# Clone config with forced clean install
+ARG NEOVIM_CONFIG_REPO="https://github.com/ColtNovak/HeaVim-nvim.git"
+RUN git clone --depth 1 "$NEOVIM_CONFIG_REPO" /root/.config/nvim \
+    && rm -rf /root/.config/nvim/.git
+
+# Pre-install plugins
+RUN nvim --headless "+Lazy! sync" +qa
+
+# Install ttyd
+RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd \
+    && chmod +x /usr/local/bin/ttyd
+
+# Verify versions
+RUN node --version && npm --version && nvim --version
 
 WORKDIR /workspace
 CMD ["ttyd", "-p", "8080", "nvim"]
