@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    software-properties-common \  # Required for add-apt-repository
+    software-properties-common \
     curl \
     git \
     && rm -rf /var/lib/apt/lists/*
@@ -19,7 +19,6 @@ RUN apt-get update && \
     fuse \
     libfuse2 \
     build-essential \
-    nodejs \  # Installed from NodeSource in next step
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
