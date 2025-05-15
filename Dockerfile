@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    software-properties-common \
     curl \
     git \
     python3-pip \
@@ -12,9 +13,10 @@ RUN apt-get update && \
     libfuse2 \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
-RUN add-apt-repository ppa:zhangsongcui3371/fastfetch \
-  apt update \
-  apt install fastfetch*
+
+RUN add-apt-repository ppa:zhangsongcui3371/fastfetch && \
+    apt-get update && \
+    apt-get install -y fastfetch
 
 RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux-x86_64.tar.gz && \
     tar xzf nvim-linux-x86_64.tar.gz && \
