@@ -3,7 +3,7 @@ vim.g.maplocalleader = " "
 
 require("lazy").setup({
     {
-    'akinsho/toggleterm.nvim', 
+    "akinsho/toggleterm.nvim", 
     version = "*",
     config = function()
       require("toggleterm").setup({
