@@ -14,37 +14,38 @@ RUN apt-get update && \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-RUN add-apt-repository ppa:zhangsongcui3371/fastfetch && \
-    apt-get update && \
-    apt-get install -y fastfetch
+RUN curl -LO https://github.com/fastfetch-cli/fastfetch/releases/download/2.13.3/fastfetch-2.13.3-Ubuntu_22.04.amd64.deb \
+    && dpkg -i fastfetch-2.13.3-Ubuntu_22.04.amd64.deb \
+    || apt-get install -yf \
+    && rm fastfetch-2.13.3-Ubuntu_22.04.amd64.deb
 
-RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux-x86_64.tar.gz && \
-    tar xzf nvim-linux-x86_64.tar.gz && \
-    mv nvim-linux-x86_64/bin/nvim /usr/local/bin/ && \
-    mv nvim-linux-x86_64/lib/nvim /usr/local/lib/ && \
-    mv nvim-linux-x86_64/share/nvim /usr/local/share/ && \
-    rm -rf nvim-linux-x86_64*
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.1/nvim-linux64.tar.gz \
+    && tar xzf nvim-linux64.tar.gz \
+    && mv nvim-linux64/bin/nvim /usr/local/bin/ \
+    && mv nvim-linux64/lib/nvim /usr/local/lib/ \
+    && mv nvim-linux64/share/nvim /usr/local/share/ \
+    && rm -rf nvim-linux64*
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get purge -y nodejs npm \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install pynvim
 
 RUN mkdir -p /root/.config/nvim
 ARG NEOVIM_CONFIG_REPO="https://github.com/ColtNovak/HeaVim-nvim.git"
-RUN git clone --depth 1 "$NEOVIM_CONFIG_REPO" /root/.config/nvim && \
-    rm -rf /root/.config/nvim/.git
+RUN git clone --depth 1 "$NEOVIM_CONFIG_REPO" /root/.config/nvim \
+    && rm -rf /root/.config/nvim/.git
 
-RUN nvim --headless "+Lazy! sync" +qa || \
-    nvim --headless "+Lazy! sync" +qa
+RUN nvim --headless "+Lazy! sync" +qa
 
-RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd && \
-    chmod +x /usr/local/bin/ttyd
+RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/local/bin/ttyd \
+    && chmod +x /usr/local/bin/ttyd
 
-RUN node --version && \
-    npm --version && \
-    nvim --version
+RUN node --version \
+    && npm --version \
+    && nvim --version
 
 WORKDIR /workspace
 CMD ["ttyd", "-p", "8080", "nvim"]
