@@ -5,9 +5,12 @@ RUN apt-get update && \
     software-properties-common \
     curl \
     git \
+    ca-certificates \
+    gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-RUN add-apt-repository ppa:neovim-ppa/stable
+RUN echo "deb http://ppa.launchpad.net/neovim-ppa/stable/ubuntu jammy main" > /etc/apt/sources.list.d/neovim.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 9DBB0BE9366964F134855E2255F96FCF8231B6DD
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
