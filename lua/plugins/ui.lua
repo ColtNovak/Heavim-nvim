@@ -31,16 +31,21 @@ return {
     version = "*",
     config = function()
       require("toggleterm").setup({
-        open_mapping = [[<c-\>]],
-                  direction = "horizontal",
-
-        float_opts = {
-          border = "curved",
-          winblend = 3,
-        }
+        direction = "horizontal",
+        open_mapping = [[<leader>tt]],
+        size = 15,
+        shade_filetypes = {},
+        shade_terminals = true,
+        shading_factor = 2,
+        persist_size = true,
+        close_on_exit = true,
+        shell = vim.o.shell,
+        auto_scroll = true,
       })
-    end
-  },
+      
+      -- Set leader to space (if not already set)
+      vim.g.mapleader = " "
+      vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { noremap = true, silent = true })
   {
     "nvim-tree/nvim-web-devicons",}
   }
