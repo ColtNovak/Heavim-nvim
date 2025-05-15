@@ -1,4 +1,3 @@
--- Set leader key first!
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -67,10 +66,8 @@ require("lazy").setup({
   }
 })
 
--- Keymaps
 vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { noremap = true, silent = true })
 
--- Terminal settings
 vim.cmd([[
   autocmd TermEnter * setlocal signcolumn=no
   autocmd TermOpen * startinsert
