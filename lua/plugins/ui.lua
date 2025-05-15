@@ -25,8 +25,7 @@ return {
         },
       })
     end,
-  },
-  {
+  },{
     'akinsho/toggleterm.nvim',
     version = "*",
     config = function()
@@ -46,6 +45,8 @@ return {
       -- Set leader to space (if not already set)
       vim.g.mapleader = " "
       vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { noremap = true, silent = true })
+    end
+  },
   {
     "nvim-tree/nvim-web-devicons",}
   }
