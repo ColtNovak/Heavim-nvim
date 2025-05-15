@@ -26,7 +26,19 @@ return {
       })
     end,
   },
-    {'akinsho/toggleterm.nvim', version = "*", config = true},
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        open_mapping = [[<c-\>]],
+        float_opts = {
+          border = "curved",
+          winblend = 3,
+        }
+      })
+    end
+  },
   {
     "nvim-tree/nvim-web-devicons",}
   }
