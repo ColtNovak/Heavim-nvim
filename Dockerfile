@@ -7,7 +7,7 @@ RUN apt-get update && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
-RUN curl -L https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o nvim-linux64.tar.gz && \
+RUN curl -L https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz -o nvim-linux64.tar.gz && \
     tar xzf nvim-linux64.tar.gz && \
     cp -r nvim-linux64/bin/* /usr/bin/ && \
     cp -r nvim-linux64/lib/* /usr/lib/ && \
