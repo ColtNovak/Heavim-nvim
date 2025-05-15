@@ -1,17 +1,19 @@
 FROM archlinux:base-devel
 
 RUN pacman -Syu --noconfirm --needed \
-    git curl neovim nodejs npm python-pip \
-    ripgrep fd fzf lua cmake make gcc \
-    python-pynvim fastfetch \
+    git neovim nodejs npm python \
+    bash ncurses util-linux xterm-terminfo \
     && rm -rf /var/cache/pacman/pkg/*
 
-RUN mkdir -p /root/.config/nvim \
-    && git clone --depth 1 https://github.com/ColtNovak/HeaVim-nvim.git /root/.config/nvim \
-    && rm -rf /root/.config/nvim/.git
+ENV TERM=xterm-256color
+ENV SHELL=/bin/bash
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 
-RUN nvim --headless "+Lazy sync" +qa \
-    && nvim --headless "+MasonInstallAll" +qa
+RUN mkdir -p /root/.config/nvim
+COPY init.lua /root/.config/nvim/
+
+RUN nvim --headless "+Lazy sync" +qa 2>&1 | tee /tmp/nvim-install.log
+
 
 RUN curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64 -o /usr/bin/ttyd \
     && chmod +x /usr/bin/ttyd
