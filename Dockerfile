@@ -1,3 +1,6 @@
+
+
+CONFIG:
 FROM ubuntu:22.04
 
 # Install base dependencies
@@ -6,10 +9,14 @@ RUN apt-get update && apt-get install -y \
     fuse libfuse2 build-essential --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js 20.x
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g neovim
+ && apt-get install -y nodejs 
+RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.11.0/nvim-linux64.tar.gz \
+    && tar xzf nvim-linux64.tar.gz \
+    && mv nvim-linux64 /usr/local/ \
+    && ln -s /usr/local/nvim-linux64/bin/nvim /usr/local/bin/nvim \
+    && rm -rf nvim-linux64.tar.gz
+ 
 
 # Install Neovim 0.9.5
 RUN curl -LO https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz \
